@@ -10,7 +10,6 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
         margin: 0;
         font-family: "Roboto", sans-serif;
         background: #0d0d0d;
@@ -23,10 +22,10 @@
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         background: #1c1c1c;
         width: 90%;
-        max-width: 800px;
+        max-width: 100%;
         height: auto;
         max-height: 600px;
-      
+        overflow-x: auto;
         padding: 10px;
       }
       .square {
@@ -39,7 +38,10 @@
       .lived {
         background-color: #00ff99;
       }
-      h1,
+      h1 {
+        margin-top: 8rem;
+        color: #e0e0e0;
+      }
       h2 {
         margin: 10px;
         color: #e0e0e0;
@@ -65,7 +67,6 @@
       button:hover {
         background: #555;
       }
-
       h4 {
         font-size: 2rem;
         color: #00ff99;
@@ -78,6 +79,16 @@
         display: flex;
         gap: 5rem;
         align-items: center;
+      }
+      .stats {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        color: #e0e0e0;
+        font-size: 1.5rem;
+      }
+      .stats span {
+        font-weight: bold;
       }
     </style>
   </head>
@@ -92,31 +103,46 @@
     <br />
     <button class="submit">Generate Visualization</button>
     <div class="legend">
-      <h4>Days Lived</h4>
-      <h5>Days Left</h5>
+      <h4>Days Lived: <span id="days-lived">0</span></h4>
+      <h5>Days Left: <span id="days-left">0</span></h5>
     </div>
     <script>
       document.querySelector(".submit").onclick = function () {
-        const birth = new Date(document.querySelector(".birth-date").value);
-        const death = new Date(document.querySelector(".death-date").value);
+        const birthInput = document.querySelector(".birth-date").value;
+        const deathInput = document.querySelector(".death-date").value;
+
+        if (!birthInput || !deathInput) {
+          alert("Please enter both dates.");
+          return;
+        }
+
+        const birth = new Date(birthInput);
+        const death = new Date(deathInput);
         const currentDate = new Date();
 
-        if (isNaN(birth) || isNaN(death) || birth >= death) {
+        if (
+          isNaN(birth.getTime()) ||
+          isNaN(death.getTime()) ||
+          birth >= death
+        ) {
           alert("Please enter valid dates of birth and expected passing.");
           return;
         }
 
-        const totalWeeks = Math.floor(
-          (death - birth) / (1000 * 60 * 60 * 24 * 7)
+        const totalDays = Math.floor((death - birth) / (1000 * 60 * 60 * 24));
+        const livedDays = Math.floor(
+          (currentDate - birth) / (1000 * 60 * 60 * 24)
         );
-        const livedWeeks = Math.floor(
-          (currentDate - birth) / (1000 * 60 * 60 * 24 * 7)
-        );
+        const daysLeft = totalDays - livedDays;
+
+        const totalWeeks = Math.floor(totalDays / 7);
+        const livedWeeks = Math.floor(livedDays / 7);
 
         const container = document.querySelector(".container");
 
         function createGrid() {
           container.innerHTML = "";
+
           for (let i = 0; i < totalWeeks; i++) {
             const square = document.createElement("div");
             square.classList.add("square");
@@ -128,6 +154,10 @@
         }
 
         createGrid();
+
+        // Update the stats
+        document.getElementById("days-lived").textContent = livedDays;
+        document.getElementById("days-left").textContent = daysLeft;
       };
     </script>
   </body>
