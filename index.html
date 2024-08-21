@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lifespan Visualization</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        font-family: "Roboto", sans-serif;
+        background: #0d0d0d;
+        color: #e0e0e0;
+      }
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        border: 2px solid #333;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        background: #1c1c1c;
+        width: 90%;
+        max-width: 800px;
+        height: auto;
+        max-height: 600px;
+        overflow: hidden;
+        padding: 10px;
+      }
+      .square {
+        width: 25px;
+        height: 4px;
+        background-color: #333;
+        border: 1px solid #1a1a1a;
+        transition: background-color 0.3s ease;
+      }
+      .lived {
+        background-color: #00ff99;
+      }
+      h1,
+      h2 {
+        margin: 10px;
+        color: #e0e0e0;
+      }
+      input[type="date"] {
+        margin: 5px;
+        padding: 5px;
+        border: 1px solid #333;
+        background: #1c1c1c;
+        color: #e0e0e0;
+        border-radius: 5px;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        background: #333;
+        color: #e0e0e0;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background: #555;
+      }
+
+      h4 {
+        font-size: 2rem;
+        color: #00ff99;
+      }
+      h5 {
+        font-size: 2rem;
+        color: #333;
+      }
+      .legend {
+        display: flex;
+        gap: 5rem;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lifespan in Weeks</h1>
+    <div class="container"></div>
+
+    <h2>Enter Date of Birth:</h2>
+    <input type="date" class="birth-date" />
+    <h2>Enter Expected Date of Passing:</h2>
+    <input type="date" class="death-date" />
+    <br />
+    <button class="submit">Generate Visualization</button>
+    <div class="legend">
+      <h4>Days Lived</h4>
+      <h5>Days Left</h5>
+    </div>
+    <script>
+      document.querySelector(".submit").onclick = function () {
+        const birth = new Date(document.querySelector(".birth-date").value);
+        const death = new Date(document.querySelector(".death-date").value);
+        const currentDate = new Date();
+
+        if (isNaN(birth) || isNaN(death) || birth >= death) {
+          alert("Please enter valid dates of birth and expected passing.");
+          return;
+        }
+
+        const totalWeeks = Math.floor(
+          (death - birth) / (1000 * 60 * 60 * 24 * 7)
+        );
+        const livedWeeks = Math.floor(
+          (currentDate - birth) / (1000 * 60 * 60 * 24 * 7)
+        );
+
+        const container = document.querySelector(".container");
+
+        function createGrid() {
+          container.innerHTML = "";
+          for (let i = 0; i < totalWeeks; i++) {
+            const square = document.createElement("div");
+            square.classList.add("square");
+            if (i < livedWeeks) {
+              square.classList.add("lived");
+            }
+            container.appendChild(square);
+          }
+        }
+
+        createGrid();
+      };
+    </script>
+  </body>
+</html>
