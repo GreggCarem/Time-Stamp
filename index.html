@@ -96,15 +96,15 @@
     <h1>Lifespan in Weeks</h1>
     <div class="container"></div>
 
-    <h2>Enter Date of Birth:</h2>
+    <h2>Date of Birth:</h2>
     <input type="date" class="birth-date" />
-    <h2>Enter Expected Date of Passing:</h2>
+    <h2>Expected Date of Death:</h2>
     <input type="date" class="death-date" />
     <br />
     <button class="submit">Generate Visualization</button>
     <div class="legend">
-      <h4>Days Lived: <span id="days-lived">0</span></h4>
-      <h5>Days Left: <span id="days-left">0</span></h5>
+      <h4>Weeks Lived: <span id="days-lived">0</span></h4>
+      <h5>Weeks Left: <span id="days-left">0</span></h5>
     </div>
     <script>
       document.querySelector(".submit").onclick = function () {
@@ -156,8 +156,12 @@
         createGrid();
 
         // Update the stats
-        document.getElementById("days-lived").textContent = livedDays;
-        document.getElementById("days-left").textContent = daysLeft;
+        document.getElementById("days-lived").textContent = Math.floor(
+          livedDays / 7
+        );
+        document.getElementById("days-left").textContent = Math.floor(
+          daysLeft / 7
+        );
       };
     </script>
   </body>
